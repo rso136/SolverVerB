@@ -33,21 +33,24 @@
 		{{/if}}
     {{/each}}
 	</div>
-	<div class="progBar column">
-      <h3>Step 2: Options</h3>
-      <div class="ui blue big progress" data-percent="50" id="progBar">
+</div>
+<div class="ui two column stackable padded centered grid">
+ 	<div class="column">
+ 	  <h3>Step 2: Options</h3>	
+      <div class="ui violet big progress" data-percent="50" id="progBar">
         <div class="bar"></div>
         <div class="label">Progress</div>
       </div>
     </div>
 </div>
+
 <script type="text/javascript">
 
 var clones = 0;
 
 $(document).ready(function(){
 	
-	$('#progBar').progress();
+$('#progBar').progress();
 
 $('.submitBtn').on('click', function() {
 

@@ -5,10 +5,17 @@ var router  = express.Router();
 
 router.get('/', function(req, res) {
 
-	res.render('home', {
-		user_id: req.session.user_id,
-		email: req.session.user_email,
-		logged_in: req.session.logged_in
+	models.User.findAll({
+		where: {
+			id: req.session.user_id
+		}
+	}).then(function(users) {
+		res.render('home', {
+			user_id: req.session.user_id,
+			email: req.session.user_email,
+			logged_in: req.session.logged_in,
+			users: users
+		})
 	})
 });
 
@@ -52,7 +59,6 @@ router.post('/logscore/:score', function(req, res) {
 	models.User.update({
 
 		score: req.params.score
-		//score: sequelize.literal('score + 5')
 	},
 	{
 		where: { id: req.session.user_id }
@@ -66,7 +72,6 @@ router.post('/logtotal/:total', function(req, res) {
 	models.User.update({
 			
 		total: req.params.total
-		//total: sequelize.literal('total + 5')
 	},
 	{
 		where: { id: req.session.user_id }
@@ -80,7 +85,7 @@ router.post('/logtotal/:total', function(req, res) {
 router.post('/create/', function(req, res) {
 	models.Problem.create({
 		user_id: req.session.user_id,
-		problem: req.params.issue
+		problem: req.body.issue
 	}).then(function(){
 		res.redirect('/options/option_input')
 	});
