@@ -37,6 +37,9 @@ router.get('/ratings/:id', function(req, res) {
 		console.log('problems', problems);
 		console.log('options', options);
 		res.render('score', {
+			user_id: req.session.user_id,
+			email: req.session.user_email,
+			logged_in: req.session.logged_in,			
 			users: users,
 			problems: problems,
 			options: options

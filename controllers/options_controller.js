@@ -7,6 +7,9 @@ router.get('/option_input', function(req, res) {
 		include: [ models.Option ]
 	}).then(function(problems) {
 		res.render('options', {
+			user_id: req.session.user_id,
+			email: req.session.user_email,
+			logged_in: req.session.logged_in,
 			problems: problems
 		})
 	})

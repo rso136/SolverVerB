@@ -20,6 +20,9 @@ router.get('/detriment_input/:id', function(req, res) {
 		console.log('options', options);
 		console.log('problems', problems);
 		res.render('detriments', {
+			user_id: req.session.user_id,
+			email: req.session.user_email,
+			logged_in: req.session.logged_in,				
 			options: options,
 			problems: problems
 		})

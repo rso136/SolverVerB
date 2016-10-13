@@ -18,8 +18,28 @@
     <title>Solver</title>
 </head>
 <body>
-	<nav class="ui menu inverted navbar page grid">
-	</nav>
+<div class="ui inverted segment">
+  <div class="ui inverted secondary pointing menu">
+    {{#unless logged_in}}
+    <a class="item">
+      Home
+    </a>
+    <a class="item">
+      Login
+    </a>
+  {{/unless}}	
+
+  {{#if logged_in}}
+  	<p class="item">
+  	 Welcome: {{email}}	
+  	</p>
+  	<a class="item" href="/users/sign-out">
+  	 Logout	
+  	</a>	
+  {{/if}}
+
+  </div>
+</div>
 
 
 	<div class="ui container">
