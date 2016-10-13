@@ -1,16 +1,24 @@
 <div class="inputGrid ui one column stackable padded centered grid">
  	<div class="column">
  		<div class="resultBox">
- 			<div class="ui blue massive message" id="best">
+ 			<div class="ui blue massive message" id="bestBox">
+ 				{{#each users}}
+ 				<input type="hidden" id="currentScore" value={{this.score}}>
+ 				<input type="hidden" id="currentTotal" value={{this.total}}>
+ 				{{/each}}
+ 				<div id="best">
  				<h2>Based on Solver's calculations, the best option is as follows:</h2>
+ 				</div>
+ 				<h2 id="postScore"><a>High Score: <span id="highSpan"></span></a></h2>
 
 			</div>
+			<div id="otherScoreBox">
 			<ul class="ui list">
 			{{#each options}}
 			<div class="resultDiv" name="{{this.option}}">
 				<h3><b><li>{{this.option}}</li></b></h3>
 				<input type="hidden" class="optionName" value={{this.option}}>
-				<h4><b>Score: <span class="resultSpan"></span></b></h4>
+				<h4 class="otherScore"><a><b>Score: <span class="resultSpan"></span></b></a></h4>
 				{{#each this.Benefits}}
 				<input type="hidden" class="benefitName" value={{this.benefit}}>
 				<input type="hidden" class="benefitWeight" value={{this.weight}}> 
@@ -22,6 +30,7 @@
 			</div>	
 			{{/each}}
 			</ul>
+			</div>
  		</div>	
 	</div>
 <div class="inputGrid ui four column stackable padded centered grid">	
@@ -31,6 +40,7 @@
 		</div>	
 	</div>	
 </div>
+
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -39,6 +49,7 @@ $(document).ready(function(){
 	var maxRating;
 	var bestOption = [];
 	var ctx = $("#myChart");
+
 
 var myChart = new Chart(ctx, {
     type: 'pie',
@@ -104,6 +115,8 @@ var myChart = new Chart(ctx, {
 
 		console.log('Highest rating is: ' + maxRating);
 
+		$('#highSpan').append(maxRating);
+
 		$('.resultDiv').each(function(){
 
 			console.log($(this).find("span").text())
@@ -132,12 +145,58 @@ var myChart = new Chart(ctx, {
 	calMax();
 	
 	$('#best')
-  	.transition('tada')
-;
+  	.transition('tada');
+	
 	myChart.update();
 
+	var curTotal = $('#currentTotal').val();
+	var curScore = $('#currentScore').val();
+	var thisTotal = $('#highSpan').text();
+	var thisScore;
 
-})
+	$(document).on('click', '.otherScore', function() {
+		
+		thisScore = $(this).children("span").text();
+		postScore = parseInt(thisScore) + parseInt(curScore);
+		postTotal = parseInt(thisTotal) + parseInt(curTotal);
+
+		$.post('/problems/logscore' + postScore, function() {
+			console.log('score sent');
+		})
+
+		$.post('/problems/logtotal/' + postTotal, function() {
+			console.log('total sent');
+
+			$('.resultDiv')
+			.transition('fly left');
+
+  			$('#bestBox').html('<h2>Thank you for using solver. Click <u><a href="/problems">here</a></u> to resolve another problem!</h2>');
+		})	
+
+	})
+
+	$(document).on('click', '#postScore', function() {
+
+		thisScore = $('#highSpan').text();
+		postScore = parseInt(thisScore) + parseInt(curScore);
+		postTotal = parseInt(thisTotal) + parseInt(curTotal);		
+
+		$.post('/problems/logscore/' + postScore, function() {
+			console.log('score sent');
+		});
+
+		$.post('/problems/logtotal/' + postTotal, function() {
+			console.log('total sent');
+			
+			$('#postScore')
+  			.transition('fly left');
+
+  			$('#otherScoreBox').html('<h2>Thank you for using solver. Click <a href="/problems">here</a> to resolve another problem!</h2>');
+		});	
+
+
+	})
+});
 
 
 </script>

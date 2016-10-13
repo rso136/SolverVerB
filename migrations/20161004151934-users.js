@@ -9,6 +9,8 @@ module.exports = {
           autoIncrement: true,
           primaryKey: true
         },
+        score: Sequelize.INTEGER,
+        total: Sequelize.INTEGER,
         email: Sequelize.STRING,
         password_hash: Sequelize.STRING,
         created_at: Sequelize.DATE,
