@@ -1,0 +1,90 @@
+ <div class="inputGrid ui one column stackable padded centered grid">
+    <div class="inputBox column">
+        <h2>What are the detriments for each option?</h2>
+        {{#each problems}}
+        <h3>Your current problem: {{this.problem}}</h3>
+        {{/each}}
+      {{#each options}}  
+      <h2><u>{{this.option}}:</u></h2>
+      <div class="masterField">
+        <button type="button" class="submitBtn ui small red button">More <i class="plus icon"></i></button> 
+        <br>
+        <br>
+        <form class="replicate ui form">
+          <div class="field">
+              <div style="width:400px" class="lgInput ui big icon input">
+                <input type="hidden" class="idInput" value={{this.id}}>
+                <input type="text" class="detrimentInput" name="detriment" placeholder="Input Detriment" size="50">
+                <i class="optionBtn inverted circular plus link icon"></i>
+              </div>
+          </div>
+
+              <h4>Rate this detriment:</h4>
+              <div class="ui quality huge star rating" data-rating="3" data-max-rating="5"></div>
+        </form>
+        <br>
+        
+      </div>    
+      {{/each}}
+          <br>
+          <br>
+          {{#each problems}}
+           <form class="ui form" action="/problems/ratings/{{this.id}}" method="GET"> 
+            <button class="ui huge blue button">Go<i class="long arrow right icon"></i></button>
+          </form>  
+          {{/each}}
+
+    </div>
+    <div class="progBar column">
+      <h3>Step 2: Options</h3>
+      <div class="ui blue big progress" data-percent="90" id="progBar">
+        <div class="bar"></div>
+        <div class="label">Progress</div>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+  var clones = 0;
+
+  $(".rating").rating();
+
+  $('#progBar').progress();
+
+  $(document).on('click', '.submitBtn', function() {
+    
+    clones++
+
+    if (clones < 9) {   
+
+      $(this).siblings('.replicate:first').clone().appendTo($(this).parent('.masterField'));
+
+      $(".rating").rating();
+    }
+    else {
+      alert('Please limit your total detriments to 9 or less.')
+    }
+  })
+
+  $(document).on('click', '.optionBtn', function() {
+    
+    var currentRating = $(this).parentsUntil("form").nextAll(".quality").eq(0).rating('get rating');
+    console.log(currentRating);
+  
+   var thisDetriment = $(this).siblings('.detrimentInput').val();
+   var thisWeight = $(this).parentsUntil("form").nextAll(".quality").eq(0).rating('get rating');
+   var thisID = $(this).siblings('.idInput').val();
+
+    $.post('/detriments/create/' + thisDetriment + '/' + thisWeight + '/' + thisID, function(){
+      console.log('benefit submitted');
+    })
+
+    $(this).closest("form").replaceWith("<h3><i>" + thisDetriment + "</i></h3>");
+
+  })
+})
+
+</script>

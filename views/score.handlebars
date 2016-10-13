@@ -1,0 +1,143 @@
+<div class="inputGrid ui one column stackable padded centered grid">
+ 	<div class="column">
+ 		<div class="resultBox">
+ 			<div class="ui blue massive message" id="best">
+ 				<h2>Based on Solver's calculations, the best option is as follows:</h2>
+
+			</div>
+			<ul class="ui list">
+			{{#each options}}
+			<div class="resultDiv" name="{{this.option}}">
+				<h3><b><li>{{this.option}}</li></b></h3>
+				<input type="hidden" class="optionName" value={{this.option}}>
+				<h4><b>Score: <span class="resultSpan"></span></b></h4>
+				{{#each this.Benefits}}
+				<input type="hidden" class="benefitName" value={{this.benefit}}>
+				<input type="hidden" class="benefitWeight" value={{this.weight}}> 
+				{{/each}}
+				{{#each this.Detriments}}
+				<input type="hidden" class="detrimentName" value={{this.detriment}}>
+				<input type="hidden" class="detrimentWeight" value={{this.weight}}>
+				{{/each}}
+			</div>	
+			{{/each}}
+			</ul>
+ 		</div>	
+	</div>
+<div class="inputGrid ui four column stackable padded centered grid">	
+	<div class="column">
+		<div class="graphBox">
+			<canvas id="myChart" width="400" height="400"></canvas>
+		</div>	
+	</div>	
+</div>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	var scoreArray = [];
+	var maxRating;
+	var bestOption = [];
+	var ctx = $("#myChart");
+
+var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Option Scores',
+            data: [],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    }
+});
+
+	$('.resultDiv').each(function() {
+		var total = 0;
+		
+		$(this).children('.benefitWeight').each(function(){
+			console.log($(this).val()); 
+			total += $(this).val();
+		})
+
+		$(this).children('.detrimentWeight').each(function() {
+			console.log($(this).val());
+			total -= $(this).val();
+		})
+
+		if (total < 0) {
+			total = 0;
+		};
+		
+		console.log($(this).children('.optionName').val());
+		console.log('Total value of this result is ' + total);
+		
+		myChart.data.labels.push($(this).children('.optionName').val());
+		myChart.data.datasets[0].data.push(total);
+
+		$(this).find("span").html(total);
+		
+		scoreArray.push(total);
+		console.log(scoreArray);
+
+	});
+
+	function calMax() {
+
+		maxRating = Math.max(...scoreArray);
+
+		console.log('Highest rating is: ' + maxRating);
+
+		$('.resultDiv').each(function(){
+
+			console.log($(this).find("span").text())
+
+			var evalRating = $(this).find("span").text();
+			
+			if (maxRating == evalRating) {
+				bestOption.push($(this).attr("name"));
+			}
+		})
+
+		console.log(bestOption[0]);
+
+		if (bestOption.length > 1) {
+			for (var i = 0; i < bestOption.length; i++) {
+				$('#best').append('<h2>' + bestOption[i] + '</h2>');
+			}
+		}
+		else {
+			$('#best').append('<h2><u>' + bestOption[0] + '</u></h2>');
+		}
+
+		console.log(bestOption[0]);
+	}
+
+	calMax();
+	
+	$('#best')
+  	.transition('tada')
+;
+	myChart.update();
+
+
+})
+
+
+</script>

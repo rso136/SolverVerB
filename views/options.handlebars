@@ -1,0 +1,80 @@
+<div class="ui one column stackable padded centered grid">
+	<div class="column">
+	<div class="masterField">
+	    {{#each problems}}
+        	{{#if @last}}
+         		<h2>Problem: {{this.problem}}</h2>
+          		<h2>Add Options</h2>
+			<form class="replicate ui form">
+        		<div class="field">
+					<div style="width:400px" class="ui big icon input">
+						<input type="hidden" class="idInput" value={{this.id}} name="id">	
+						<input class="optionInput" type="text" placeholder="Input Option" name="option"><i class="optionBtn inverted circular plus link icon"></i>
+					</div>
+				</div>
+				<br>	
+			</form>
+			<form class="replicate ui form">
+        		<div class="field">
+					<div style="width:400px" class="ui big icon input">
+						<input type="hidden" class="idInput" value={{this.id}} name="id">
+						<input class="optionInput" type="text" placeholder="Input Option" name="option"><i class="optionBtn inverted circular plus link icon"></i>
+					</div>
+				</div>
+				<br>	
+			</form>
+		</div>	
+          	<button type="button" class="submitBtn ui huge red button">Add More <i class="plus icon"></i></button> 
+          	<br>
+          	<br>
+          	<form action="/benefits/benefit_input/{{this.id}}" method="GET"> 
+          	<button class="ui huge blue button">Go<i class="long arrow right icon"></i></button>
+          	</form>
+		{{/if}}
+    {{/each}}
+	</div>
+	<div class="progBar column">
+      <h3>Step 2: Options</h3>
+      <div class="ui blue big progress" data-percent="50" id="progBar">
+        <div class="bar"></div>
+        <div class="label">Progress</div>
+      </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+var clones = 0;
+
+$(document).ready(function(){
+	
+	$('#progBar').progress();
+
+$('.submitBtn').on('click', function() {
+
+    clones++
+
+    if (clones < 4) {
+      $('.replicate:first').clone(true).appendTo('.masterField');
+    }
+    else {
+      alert('Please limit your options to 4.');
+    }
+  })
+	
+$(document).on('click', '.optionBtn', function() {
+
+		var thisOpt = $(this).siblings('.optionInput').val();
+		var thisID = $(this).siblings('.idInput').val();
+
+		$.post('/options/create/' + thisOpt + '/' + thisID, function(){
+			console.log('option submitted');
+		})
+
+		var outForm = $(this).closest("form"); 
+
+		$(this).closest("form").replaceWith("<h3><i>" + thisOpt + "</i></h3><br>");
+
+	})	
+})
+
+</script>
