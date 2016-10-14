@@ -9,8 +9,18 @@ module.exports = {
           autoIncrement: true,
           primaryKey: true
         },
-        score: Sequelize.INTEGER,
-        total: Sequelize.INTEGER,
+        score: {
+          type: Sequelize.INTEGER,
+          defaultValue: '0' 
+        },
+        total: {
+          type: Sequelize.INTEGER,
+          defaultValue: '0' 
+        },
+        grade: {
+          type: Sequelize.STRING,
+          defaultValue: 'E'
+        },   
         random: Sequelize.STRING, 
         email: Sequelize.STRING,
         password_hash: Sequelize.STRING,

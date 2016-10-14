@@ -95,12 +95,14 @@ var myChart = new Chart(ctx, {
 		
 		$(this).children('.benefitWeight').each(function(){
 			console.log($(this).val()); 
-			total += $(this).val();
+			total += parseInt($(this).val());
+			console.log('Benefit total: ' + total);
 		})
 
 		$(this).children('.detrimentWeight').each(function() {
 			console.log($(this).val());
-			total -= $(this).val();
+			total -= parseInt($(this).val());
+			console.log('Detriment total: ' + total);
 		})
 
 		if (total < 0) {
@@ -153,6 +155,40 @@ var myChart = new Chart(ctx, {
 		console.log(bestOption[0]);
 	}
 
+	function calGrade() {
+
+		var gradeNum = parseInt(postScore) / parseInt(postTotal);
+		console.log(gradeNum);
+		var userGrade;
+
+		if (gradeNum >= .9) {
+			userGrade = 'A';
+		}
+
+		if (gradeNum >= .8 && gradeNum < .9) {
+			userGrade = 'B';
+		}
+
+		if (gradeNum >= .7 && gradeNum < .8) {
+			userGrade = 'C';
+
+		}
+
+		if (gradeNum >= .6 && gradeNum < .7) {
+			userGrade = 'D';
+		}
+
+		if (gradeNum < .6) {
+			userGrade = 'F';
+		}
+
+		console.log(userGrade);
+
+		$.post('/problems/evaluate/' + userGrade, function() {
+			console.log('grade sent');
+		})
+	}
+
 	calMax();
 	
 	$('#bestBox')
@@ -167,11 +203,13 @@ var myChart = new Chart(ctx, {
 
 	$(document).on('click', '.otherScore', function() {
 		
-		thisScore = $(this).children("span").text();
+		thisScore = $(this).find("span").text();
 		postScore = parseInt(thisScore) + parseInt(curScore);
 		postTotal = parseInt(thisTotal) + parseInt(curTotal);
 
-		$.post('/problems/logscore' + postScore, function() {
+		console.log(thisScore);
+
+		$.post('/problems/logscore/' + postScore, function() {
 			console.log('score sent');
 		})
 
@@ -183,6 +221,8 @@ var myChart = new Chart(ctx, {
 
   			$('#bestBox').html('<h2>Thank you for using solver. Click <u><a href="/problems">here</a></u> to resolve another problem!</h2>');
 		})	
+
+		calGrade();
 
 	})
 
@@ -205,7 +245,7 @@ var myChart = new Chart(ctx, {
   			$('#otherScoreBox').html('<h2>Thank you for using solver. Click <a href="/problems">here</a> to resolve another problem!</h2>');
 		});	
 
-
+		calGrade();
 	})
 });
 

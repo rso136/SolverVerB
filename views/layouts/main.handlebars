@@ -36,6 +36,11 @@
   	<a class="item" href="/users/sign-out">
   	 Logout	
   	</a>	
+    {{#each users}}
+    <a class="item">
+     {{this.grade}} 
+    </a>  
+    {{/each}}
   {{/if}}
 
   </div>

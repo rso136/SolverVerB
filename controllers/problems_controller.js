@@ -49,7 +49,7 @@ router.get('/ratings/:id', function(req, res) {
 			logged_in: req.session.logged_in,			
 			users: users,
 			problems: problems,
-			options: options
+			options: options			
 		})	
 	})
 });
@@ -78,6 +78,20 @@ router.post('/logtotal/:total', function(req, res) {
 	})
 	.then(function() {
 		res.send('total posted');
+	})
+});
+
+router.post('/evaluate/:grade', function(req, res) {
+
+	models.User.update({
+
+		grade: req.params.grade
+	},
+	{
+		where: { id: req.session.user_id }	
+	})
+	.then(function() {
+		res.send('grade posted');
 	})
 });
 
