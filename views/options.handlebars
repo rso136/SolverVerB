@@ -1,3 +1,4 @@
+<div class="ui container">
 <div class="ui one column stackable padded centered grid">
 	<div class="column">
 	<div class="masterField">
@@ -9,7 +10,7 @@
         		<div class="field">
 					<div style="width:400px" class="ui big icon input">
 						<input type="hidden" class="idInput" value={{this.id}} name="id">	
-						<input class="optionInput" type="text" placeholder="Input Option" name="option"><i class="optionBtn inverted circular plus link icon"></i>
+						<input class="optionInput" type="text" placeholder="Input Option" name="option" required><i class="optionBtn inverted circular plus link icon"></i>
 					</div>
 				</div>
 				<br>	
@@ -18,7 +19,7 @@
         		<div class="field">
 					<div style="width:400px" class="ui big icon input">
 						<input type="hidden" class="idInput" value={{this.id}} name="id">
-						<input class="optionInput" type="text" placeholder="Input Option" name="option"><i class="optionBtn inverted circular plus link icon"></i>
+						<input class="optionInput" type="text" placeholder="Input Option" name="option" required><i class="optionBtn inverted circular plus link icon"></i>
 					</div>
 				</div>
 				<br>	
@@ -28,7 +29,7 @@
           	<br>
           	<br>
           	<form action="/benefits/benefit_input/{{this.id}}" method="GET"> 
-          	<button class="ui huge blue button">Go<i class="long arrow right icon"></i></button>
+          	<button class="ui huge blue button" id="nextBtn">Go<i class="long arrow right icon"></i></button>
           	</form>
 		{{/if}}
     {{/each}}
@@ -43,18 +44,25 @@
       </div>
     </div>
 </div>
+</div>
 
 <script type="text/javascript">
 
-var clones = 0;
-
 $(document).ready(function(){
+
+var clones = 0;
+var inputNum = 2;
 	
 $('#progBar').progress();
+
+if (inputNum > 0) {
+	document.getElementById("nextBtn").disabled = true;
+}
 
 $('.submitBtn').on('click', function() {
 
     clones++
+    inputNum++
 
     if (clones < 4) {
       $('.replicate:first').clone(true).appendTo('.masterField');
@@ -66,8 +74,23 @@ $('.submitBtn').on('click', function() {
 	
 $(document).on('click', '.optionBtn', function() {
 
+		inputNum-- 
+
+		if (inputNum === 0) {
+			document.getElementById("nextBtn").disabled = false;
+			$('#nextBtn')
+  			.transition('jiggle');
+		}
+
+		
 		var thisOpt = $(this).siblings('.optionInput').val();
 		var thisID = $(this).siblings('.idInput').val();
+
+		if (thisOpt.length == 0) {
+			console.log('Enter input');
+			inputNum++
+		}
+		else {
 
 		$.post('/options/create/' + thisOpt + '/' + thisID, function(){
 			console.log('option submitted');
@@ -76,7 +99,7 @@ $(document).on('click', '.optionBtn', function() {
 		var outForm = $(this).closest("form"); 
 
 		$(this).closest("form").replaceWith("<h3><i>" + thisOpt + "</i></h3><br>");
-
+		}
 	})	
 })
 

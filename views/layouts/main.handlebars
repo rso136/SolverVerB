@@ -15,41 +15,39 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
-    <title>Solver</title>
+
+<title>Solver</title>
+
 </head>
+
 <body>
 <div class="ui inverted segment">
   <div class="ui inverted secondary pointing menu">
     {{#unless logged_in}}
-    <a class="item">
-      Home
-    </a>
-    <a class="item">
-      Login
-    </a>
+    <h3 class="item">
+      <a href="/">Home</a>
+    </h3>
+    <h3 class="item">
+      <a href="/users/sign-in">Login</a>
+    </h3>
   {{/unless}}	
 
   {{#if logged_in}}
-  	<p class="item">
-  	 Welcome: {{email}}	
-  	</p>
   	<a class="item" href="/users/sign-out">
-  	 Logout	
+      <h3>Logout</h3>
   	</a>	
     {{#each users}}
-    <a class="item">
-     {{this.grade}} 
-    </a>  
+    <h3 class="item">
+     Rating: {{this.grade}} 
+    </h3>  
     {{/each}}
   {{/if}}
 
   </div>
 </div>
 
+{{{body}}}
 
-	<div class="ui container">
-			{{{body}}}
-	</div>
 
 </body>
 

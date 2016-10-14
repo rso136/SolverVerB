@@ -12,6 +12,11 @@ var domain = 'mg.richardsoh.com';
 var from_who = 'noreply@mg.richardsoh.com'
 
 //this is the users_controller.js file
+
+router.get('/solver', function(req, res) {
+	res.render('intro')
+})
+
 router.get('/new', function(req,res) {
 	res.render('new');
 });
@@ -56,7 +61,7 @@ router.post('/forget', function(req, res) {
     //Specify email data
       from: from_who,
     //The email to contact
-      to: 'rso136@gmail.com',
+      to: req.body.email,
     //Subject and text data  
       subject: 'Solver Password Reset',
       html: 'Here is your password reset link: localhost:3000/users/reset/' + randnum 

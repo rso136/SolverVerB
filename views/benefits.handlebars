@@ -1,3 +1,4 @@
+<div class="ui container">
  <div class="inputGrid ui one column stackable padded centered grid">
     <div class="inputBox column">
         <h2>What are the benefits for each option?</h2>
@@ -14,7 +15,7 @@
           <div class="field">
               <div style="width:400px" class="lgInput ui big icon input">
                 <input type="hidden" class="idInput" value={{this.id}}>
-                <input type="text" class="benefitInput" name="benefit" placeholder="Input Benefit" size="50">
+                <input type="text" class="benefitInput" name="benefit" placeholder="Input Benefit" size="50" required>
                 <i class="optionBtn inverted circular plus link icon"></i>
               </div>
           </div>
@@ -30,7 +31,7 @@
           <br>
           {{#each problems}}
           <form class="ui form" action="/detriments/detriment_input/{{this.id}}" method="GET"> 
-            <button class="ui huge blue button">Go<i class="long arrow right icon"></i></button>
+            <button class="ui huge blue button" id="nextBtn">Go<i class="long arrow right icon"></i></button>
           </form>
           {{/each}}
 
@@ -45,6 +46,7 @@
       </div>
     </div>
 </div>
+</div>
 
 <script type="text/javascript">
 
@@ -52,13 +54,21 @@ $(document).ready(function(){
 
   var clones = 0;
 
+  var inputNum = $('.masterField .replicate').length;
+
   $(".rating").rating();
 
   $('#progBar').progress();
 
+  if (inputNum > 0) {
+      document.getElementById("nextBtn").disabled = true;
+  }
+
   $(document).on('click', '.submitBtn', function() {
     
     clones++
+
+    inputNum++
 
     if (clones < 9) {   
 
@@ -72,6 +82,12 @@ $(document).ready(function(){
   })
 
   $(document).on('click', '.optionBtn', function() {
+
+    inputNum--
+
+    if(inputNum === 0) {
+        document.getElementById("nextBtn").disabled = false;
+    }
     
     var currentRating = $(this).parentsUntil("form").nextAll(".quality").eq(0).rating('get rating');
     console.log(currentRating);
@@ -80,12 +96,18 @@ $(document).ready(function(){
    var thisWeight = $(this).parentsUntil("form").nextAll(".quality").eq(0).rating('get rating');
    var thisID = $(this).siblings('.idInput').val();
 
+   if (thisBenefit.length == 0) {
+      console.log('Enter input');
+      inputNum++
+   }
+   else {
+
     $.post('/benefits/create/' + thisBenefit + '/' + thisWeight + '/' + thisID, function(){
       console.log('benefit submitted');
     })
 
     $(this).closest("form").replaceWith("<h3><i>" + thisBenefit + "</i></h3>");
-
+    }
   })
 })
 

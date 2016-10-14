@@ -1,17 +1,17 @@
-#introBox {
-	height: 500px;
-	background-image: url("../images/jumbotron.jpg");
+#jumbotron {
+	height: 450px;
 }
 
-#headerA {
-	padding-top: 200px;
-}
-
-#title {
+#titleBox {
+	padding-top: 150px;
 	font-size: 60px;
 }
 
-#header {
-	height: 150px;
-	background-image: url("../images/jumbotron.jpg");
+#footer {
+	height: 100px;
 }
+
+#contentBox {
+	margin-top: 50px;
+}
+
