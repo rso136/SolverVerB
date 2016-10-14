@@ -11,6 +11,7 @@ module.exports = {
         },
         score: Sequelize.INTEGER,
         total: Sequelize.INTEGER,
+        random: Sequelize.STRING, 
         email: Sequelize.STRING,
         password_hash: Sequelize.STRING,
         created_at: Sequelize.DATE,
