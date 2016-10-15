@@ -6,6 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var methodOverride = require('method-override');
+var debug = require('debug')('express-example');
+var app = require('./server');
+var models = require("./models");
 
 var application_controller = require('./controllers/application_controller');
 var detriments_controller = require('./controllers/detriments_controller');
@@ -77,5 +80,12 @@ if (process.env.JAWSDB_URL) {
 	})
 }
 
+app.set('port', process.env.PORT || 3000);
+
+models.sequelize.sync().then(function () {
+  var server = app.listen(app.get('port'), function() {
+    debug('Express server listening on port ' + server.address().port);
+  });
+});
 
 module.exports = app;
