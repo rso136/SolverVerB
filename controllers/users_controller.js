@@ -151,9 +151,9 @@ router.post('/login', function(req, res) {
   });
 });
 
-router.post('/create', function(req,res) {
+router.post('/create/:email/:password', function(req,res) {
 	models.User.findAll({
-    where: {email: req.body.email}
+    where: {email: req.params.email}
   }).then(function(users) {
 
 		if (users.length > 0){
@@ -162,9 +162,9 @@ router.post('/create', function(req,res) {
 		}else{
 
 			bcrypt.genSalt(10, function(err, salt) {
-					bcrypt.hash(req.body.password, salt, function(err, hash) {
+					bcrypt.hash(req.params.password, salt, function(err, hash) {
 						models.User.create({
-							email: req.body.email,
+							email: req.params.email,
 							password_hash: hash
 						}).then(function(user){
 
@@ -172,7 +172,7 @@ router.post('/create', function(req,res) {
 							req.session.user_id = user.id;
 							req.session.user_email = user.email;
 
-							res.redirect('/problems')
+							res.send('posted to database');
 						});
 					});
 			});

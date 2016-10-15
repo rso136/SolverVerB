@@ -189,7 +189,7 @@ var myChart = new Chart(ctx, {
 
 		$('#otherScoreBox').html('<h2>Your solver rating is currently: </h2><h1 id="finalGrade">' + userGrade + '</h1>');
 
-		$('#finalGrade')
+		$('#otherScoreBox')
 		.transition('flash');
 
 		$.post('/problems/evaluate/' + userGrade, function() {
@@ -200,7 +200,7 @@ var myChart = new Chart(ctx, {
 	calMax();
 	
 	$('#bestBox')
-  	.transition('flash');
+  	.transition('tada');
 	
 	myChart.update();
 
