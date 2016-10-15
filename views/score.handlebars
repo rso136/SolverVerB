@@ -2,7 +2,7 @@
 <div class="inputGrid ui one column stackable padded centered grid">
  	<div class="column">
  		<div class="resultBox">
- 			<div class="ui blue massive message" id="bestBox">
+ 			<div class="ui black massive message" id="bestBox">
  				{{#each users}}
  				<input type="hidden" id="currentScore" value={{this.score}}>
  				<input type="hidden" id="currentTotal" value={{this.total}}>
@@ -10,16 +10,17 @@
  				<div id="best">
  				<h2>Based on Solver's calculations, the best option is as follows:</h2>
  				</div>
- 				<h2 id="postScore"><a>High Score: <span id="highSpan"></span></a></h2>
-
-			</div>
-			<div id="otherScoreBox">
+ 				<h2 id="postScore">High Score: <span id="highSpan"></span></h2>
+ 			</div>
+			<div class="ui black massive message" id="otherScoreBox">
+			<h2>Please select one of your options!</h2>
 				<ul class="ui list">
 				{{#each options}}
 				<div class="resultDiv" name="{{this.option}}">
-					<h3><b><li>{{this.option}}</li></b></h3>
+					<a class="otherScore" href='#'><h2><li>{{this.option}}</li></h2>
 					<input type="hidden" class="optionName" value={{this.option}}>
-					<h4 class="otherScore"><a><b>Score: <span class="resultSpan"></span></b></a></h4>
+					<h3>Score: <span class="resultSpan"></span></h3></a>
+					<br>
 					{{#each this.Benefits}}
 					<input type="hidden" class="benefitName" value={{this.benefit}}>
 					<input type="hidden" class="benefitWeight" value={{this.weight}}> 
@@ -98,23 +99,23 @@ var myChart = new Chart(ctx, {
 		$(this).children('.benefitWeight').each(function(){
 			console.log($(this).val()); 
 			total += parseInt($(this).val());
-			console.log('Benefit total: ' + total);
+			console.log('Total with benefits: ' + total);
 		})
 
 		$(this).children('.detrimentWeight').each(function() {
 			console.log($(this).val());
 			total -= parseInt($(this).val());
-			console.log('Detriment total: ' + total);
+			console.log('Total subtracting detriments: ' + total);
 		})
 
 		if (total < 0) {
 			total = 0;
 		};
 		
-		console.log($(this).children('.optionName').val());
+		console.log($(this).find('.optionName').val());
 		console.log('Total value of this result is ' + total);
 		
-		myChart.data.labels.push($(this).children('.optionName').val());
+		myChart.data.labels.push($(this).find('.optionName').val());
 		myChart.data.datasets[0].data.push(total);
 
 		$(this).find("span").html(total);
@@ -186,6 +187,11 @@ var myChart = new Chart(ctx, {
 
 		console.log(userGrade);
 
+		$('#otherScoreBox').html('<h2>Your solver rating is currently: </h2><h1 id="finalGrade">' + userGrade + '</h1>');
+
+		$('#finalGrade')
+		.transition('flash');
+
 		$.post('/problems/evaluate/' + userGrade, function() {
 			console.log('grade sent');
 		})
@@ -194,7 +200,7 @@ var myChart = new Chart(ctx, {
 	calMax();
 	
 	$('#bestBox')
-  	.transition('tada');
+  	.transition('flash');
 	
 	myChart.update();
 
@@ -218,10 +224,7 @@ var myChart = new Chart(ctx, {
 		$.post('/problems/logtotal/' + postTotal, function() {
 			console.log('total sent');
 
-			$('.resultDiv')
-			.transition('fly left');
-
-  			$('#bestBox').html('<h2>Thank you for using solver. Click <u><a href="/problems">here</a></u> to resolve another problem!</h2>');
+  			$('#bestBox').html('<a href="/problems"><h2>Thank you for using solver. Click to resolve another problem!</h2></a>');
 		})	
 
 		calGrade();
@@ -240,11 +243,8 @@ var myChart = new Chart(ctx, {
 
 		$.post('/problems/logtotal/' + postTotal, function() {
 			console.log('total sent');
-			
-			$('#postScore')
-  			.transition('fly left');
 
-  			$('#otherScoreBox').html('<h2>Thank you for using solver. Click <a href="/problems">here</a> to resolve another problem!</h2>');
+  			$('#bestBox').html('<a href="/problems"><h2>Thank you for using solver. Click to resolve another problem!</h2></a>');
 		});	
 
 		calGrade();
