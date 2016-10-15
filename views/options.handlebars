@@ -52,6 +52,7 @@ $(document).ready(function(){
 
 var clones = 0;
 var inputNum = 2;
+var inputEval = $('.masterField .replicate').length;
 	
 $('#progBar').progress();
 
@@ -61,20 +62,32 @@ if (inputNum > 0) {
 
 $('.submitBtn').on('click', function() {
 
+	if (inputEval === 0) {
+    	location.reload(true);
+    }
+
+	else {
+
+	inputEval++
+	console.log(inputEval);
     clones++
     inputNum++
 
-    if (clones < 4) {
+	if (clones < 4) {
       $('.replicate:first').clone(true).appendTo('.masterField');
     }
     else {
       alert('Please limit your options to 4.');
     }
+
+	}
   })
 	
 $(document).on('click', '.optionBtn', function() {
 
-		inputNum-- 
+		inputNum--
+
+		inputEval-- 
 
 		if (inputNum === 0) {
 			document.getElementById("nextBtn").disabled = false;

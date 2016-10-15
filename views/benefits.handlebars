@@ -66,6 +66,10 @@ $(document).ready(function(){
 
   $(document).on('click', '.submitBtn', function() {
     
+    if (inputNum === 0) {
+        location.reload(true);
+    }
+
     clones++
 
     inputNum++
@@ -85,8 +89,10 @@ $(document).ready(function(){
 
     inputNum--
 
-    if(inputNum === 0) {
+    if (inputNum === 0) {
         document.getElementById("nextBtn").disabled = false;
+        $('#nextBtn')
+        .transition('jiggle');
     }
     
     var currentRating = $(this).parentsUntil("form").nextAll(".quality").eq(0).rating('get rating');
